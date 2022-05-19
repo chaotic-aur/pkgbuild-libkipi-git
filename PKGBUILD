@@ -14,9 +14,15 @@ source=("git+https://invent.kde.org/graphics/libkipi")
 md5sums=('SKIP')
 install=libkipi-git.install
 
+#pkgver() {
+#  cd "${srcdir}/libkipi"
+#  printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+#}
+
 pkgver() {
-  cd "${srcdir}/libkipi"
-  printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+  cd ${pkgname%-git}
+  _ver="$(grep -m1 'set(PROJECT_VERSION' CMakeLists.txt | cut -d '"' -f2 | tr - .)"
+  echo "${_ver}_r$(git rev-list --count HEAD).g$(git rev-parse --short HEAD)"
 }
 
 prepare() {
